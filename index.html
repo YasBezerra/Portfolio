@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfólio de Yasmin Bezerra - Desenvolvedora">
+    <title>Yasmin Bezerra | Portfólio</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="carousel.css">
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Intro Overlay -->
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <span id="intro-text"></span><span class="intro-cursor">|</span>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">YB.</div>
+        <div class="nav-links">
+            <a href="#about">Sobre</a>
+            <a href="#projects">Projetos</a>
+            <a href="#contact">Contato</a>
+        </div>
+        <button id="theme-toggle" aria-label="Alternar Tema">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </nav>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="profile-container">
+                <img id="profile-img" src="" alt="Yasmin Bezerra" class="profile-img">
+            </div>
+            <div class="hero-content">
+                <h1 class="typewriter-container">
+                    <span id="typewriter"></span><span class="cursor">|</span>
+                </h1>
+                <p class="subtitle">Desenvolvedora</p>
+                <div class="social-hero">
+                    <a href="https://github.com/YasBezerra" target="_blank" aria-label="GitHub"><i
+                            class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/yasminbsantos/" target="_blank" aria-label="LinkedIn"><i
+                            class="fa-brands fa-linkedin-in"></i></a> <!-- Assuming linkedin, can update later -->
+                    <a href="mailto:yasmin.beatrizz@gmail.com" aria-label="Email"><i
+                            class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="line"></div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="section-header">
+                <h2>Minha Jornada</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-main">
+                    <p class="about-intro">Sou estudante de Engenharia de Software, atualmente no terceiro período, e
+                        possuo MBA em Marketing. Essa combinação molda a forma como desenvolvo software, unindo
+                        pensamento técnico com visão de produto e experiência do usuário.</p>
+
+                    <button id="read-more-btn" class="read-more-btn">
+                        Saiba mais sobre minha trajetória <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div id="about-details" class="about-details">
+                        <p>Minha formação em engenharia tem sido focada principalmente em desenvolvimento backend, com
+                            estudos e projetos utilizando JavaScript, Node.js e Java. Tenho interesse em entender a
+                            estrutura das aplicações, organização do código, comunicação entre sistemas e construção de
+                            soluções consistentes e bem definidas.</p>
+                        <p>Ao longo da minha jornada acadêmica, também tive contato com conceitos de computação em
+                            nuvem, aplicados de forma prática em ambientes de estudo, o que ampliou minha compreensão
+                            sobre como aplicações são executadas e gerenciadas fora do ambiente local.</p>
+                        <p>A experiência prévia em marketing contribui para que eu desenvolva soluções alinhadas às
+                            necessidades reais dos usuários e aos objetivos do produto. Busco uma oportunidade como
+                            estagiária ou desenvolvedora em início de carreira, onde eu possa evoluir tecnicamente,
+                            assumir responsabilidades e crescer junto com o time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects-section">
+            <div class="section-header">
+                <h2>Projetos Selecionados</h2>
+                <div class="divider"></div>
+            </div>
+            <div id="projects-grid" class="projects-grid">
+                <!-- Projects will be injected here via JS -->
+                <div class="loading">Carregando projetos do GitHub...</div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="contact-card">
+                <h2>Vamos criar algo incrível?</h2>
+                <p>Estou aberta a novas oportunidades e colaborações.</p>
+                <a href="mailto:yasmin.beatrizz@gmail.com" class="btn-primary">Entrar em Contato</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Yasmin Bezerra. Feito com ❤️ e código.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
