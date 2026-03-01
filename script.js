@@ -15,6 +15,16 @@ const introMessage = "Hello world, eu sou a Yasmin";
 const typingSpeed = 100;
 const introDelay = 2000; // 2 seconds black screen
 
+// Pinned Repos to Show
+const pinnedRepos = [
+    'inspire-pixel',
+    'Passoia',
+    'AgilStore',
+    'ReciclaTech',
+    'biblioteca-flask',
+    'YasminBezerra-teste-estagio-imovel-pay'
+];
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Re-select elements inside event to ensure DOM is ready
@@ -83,14 +93,16 @@ window.addEventListener('mousemove', (e) => {
     cursorDot.style.top = `${posY}px`;
 
     // Add a slight delay for the outline using animate/requestAnimationFrame can be better but simple CSS transition works here too
-    cursorOutline.animate({
-        left: `${posX}px`,
-        top: `${posY}px`
-    }, { duration: 500, fill: "forwards" });
+    if (cursorOutline.animate) {
+        cursorOutline.animate({
+            left: `${posX}px`,
+            top: `${posY}px`
+        }, { duration: 500, fill: "forwards" });
+    } else {
+        cursorOutline.style.left = `${posX}px`;
+        cursorOutline.style.top = `${posY}px`;
+    }
 });
-
-// Typewriter Effect
-// Old functions removed for cleanliness
 
 // Theme Toggle
 themeToggle.addEventListener('click', () => {
@@ -121,13 +133,9 @@ function updateThemeIcon(theme) {
 // GitHub Projects Fetcher
 async function fetchGitHubProjects() {
     try {
-        // Reverting to fetch ALL repos (sorted by updated)
-        const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=100`);
         const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`);
+        if (!userResponse.ok) throw new Error('Falha ao buscar usuário');
 
-        if (!response.ok || !userResponse.ok) throw new Error('Falha ao buscar dados');
-
-        const repos = await response.json();
         const userData = await userResponse.json();
 
         // Update Profile Image
@@ -138,62 +146,61 @@ async function fetchGitHubProjects() {
 
         const projectsContainer = document.getElementById('projects-grid');
         projectsContainer.innerHTML = '';
-        projectsContainer.style.display = 'block';
+        projectsContainer.style.display = 'grid';
 
-        // Filter: Non-forks, has language
-        const relevantRepos = repos.filter(repo => !repo.fork && repo.language);
+        for (let i = 0; i < pinnedRepos.length; i++) {
+            const repoName = pinnedRepos[i];
+            try {
+                const repoResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}`);
+                if (!repoResponse.ok) continue;
 
-        if (relevantRepos.length === 0) {
-            projectsContainer.innerHTML = '<p>Nenhum projeto público encontrado.</p>';
-            return;
+                const repo = await repoResponse.json();
+
+                let imageUrl = '';
+                try {
+                    const readmeResponse = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}/readme`);
+                    if (readmeResponse.ok) {
+                        const readmeData = await readmeResponse.json();
+                        // Github API returns base64 content with newlines
+                        const decodedContent = decodeURIComponent(escape(atob(readmeData.content.replace(/\n/g, ''))));
+
+                        // Regular expression to match ![]() or <img src="" />
+                        const imgRegex = /!\[.*?\]\((.*?)\)|<img.*?src="(.*?)".*?>/i;
+                        const match = decodedContent.match(imgRegex);
+
+                        if (match) {
+                            imageUrl = match[1] || match[2];
+
+                            // Check if image URL is relative
+                            if (imageUrl && !imageUrl.startsWith('http')) {
+                                const branch = repo.default_branch || 'main';
+                                // Transform relative to raw absolute GitHub URL
+                                imageUrl = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/${branch}/${imageUrl.replace(/^[\\/\.]+/, '')}`;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`Could not fetch README or Image for ${repoName}`);
+                }
+
+                // fallback to a placeholder if no image
+                if (!imageUrl) {
+                    imageUrl = `https://placehold.co/600x400/151515/FFFFFF?text=${repoName}`;
+                }
+
+                const card = createProjectCard(repo, imageUrl, i);
+                projectsContainer.appendChild(card);
+
+            } catch (e) {
+                console.error(`Erro ao processar repositório ${repoName}`, e);
+            }
         }
-
-        // Group by Language
-        const projectsByStack = relevantRepos.reduce((acc, repo) => {
-            const language = repo.language || 'Outros';
-            if (!acc[language]) acc[language] = [];
-            acc[language].push(repo);
-            return acc;
-        }, {});
-
-        // Render Groups as Carousels
-        Object.keys(projectsByStack).sort().forEach(language => {
-            const stackGroup = document.createElement('div');
-            stackGroup.className = 'stack-group';
-            // Unique ID for carousel logic
-            const carouselId = `carousel-${language.replace(/\s+/g, '-').toLowerCase()}`;
-
-            stackGroup.innerHTML = `
-                <div class="stack-header">
-                    <h3 class="stack-title">${language}</h3>
-                    <div class="carousel-controls">
-                        <button class="carousel-btn prev" aria-label="Anterior" onclick="scrollCarousel('${carouselId}', -1)">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button class="carousel-btn next" aria-label="Próximo" onclick="scrollCarousel('${carouselId}', 1)">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-                <div id="${carouselId}" class="carousel-container">
-                    <!-- Cards injected here -->
-                </div>
-            `;
-
-            projectsContainer.appendChild(stackGroup);
-
-            // Inject cards into the container
-            const container = document.getElementById(carouselId);
-            projectsByStack[language].forEach((repo, index) => {
-                const card = createProjectCard(repo, index);
-                container.appendChild(card);
-            });
-        });
 
         // Add "View More" Button
         const viewMoreContainer = document.createElement('div');
         viewMoreContainer.style.textAlign = 'center';
         viewMoreContainer.style.marginTop = '4rem';
+        viewMoreContainer.style.gridColumn = '1 / -1';
         viewMoreContainer.innerHTML = `
             <a href="https://github.com/${githubUsername}?tab=repositories" target="_blank" class="btn-secondary">
                 Ver mais projetos no GitHub <i class="fa-solid fa-arrow-right"></i>
@@ -202,22 +209,10 @@ async function fetchGitHubProjects() {
         projectsContainer.appendChild(viewMoreContainer);
 
     } catch (error) {
-        console.error('Erro:', error);
-        document.getElementById('projects-grid').innerHTML = '<p>Erro ao carregar projetos via API. Tente recarregar a página.</p>';
+        console.error('Erro geral ao buscar projetos:', error);
+        document.getElementById('projects-grid').innerHTML = '<p>Erro ao carregar projetos. Tente novamente mais tarde.</p>';
     }
 }
-
-// Carousel Scroll Logic
-window.scrollCarousel = function (carouselId, direction) {
-    const container = document.getElementById(carouselId);
-    if (container) {
-        const scrollAmount = 340; // Card width + gap
-        container.scrollBy({
-            left: scrollAmount * direction,
-            behavior: 'smooth'
-        });
-    }
-};
 
 // About Read More Logic
 const readMoreBtn = document.getElementById('read-more-btn');
@@ -239,22 +234,25 @@ if (readMoreBtn) {
     });
 }
 
-function createProjectCard(repo, index) {
+function createProjectCard(repo, imageUrl, index) {
     const card = document.createElement('div');
     card.className = 'project-card';
-    // Remove fixed animation delay to avoid sync issues in multiple grids, or keep it per card
-    // card.style.animationDelay = `${index * 0.1}s`; 
+    card.style.animationDelay = `${index * 0.1}s`;
 
-    // Determine language color/tag
     const language = repo.language || 'Code';
 
     card.innerHTML = `
+        <div class="project-image-container">
+            <img src="${imageUrl}" alt="${repo.name}" class="project-image" loading="lazy" onerror="this.src='https://placehold.co/600x400/151515/FFFFFF?text=${repo.name}'">
+        </div>
         <div class="project-info">
-            <div class="project-tags">
-                <span class="tag">${language}</span>
+            <div>
+                <div class="project-tags">
+                    <span class="tag">${language}</span>
+                </div>
+                <h3>${repo.name}</h3>
+                <p>${repo.description || 'Projeto desenvolvido por ' + githubUsername}</p>
             </div>
-            <h3>${repo.name}</h3>
-            <p>${repo.description || 'Sem descrição fornecida.'}</p>
             <div class="project-links">
                 ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="icon-link" aria-label="Live Demo"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
                 <a href="${repo.html_url}" target="_blank" class="icon-link" aria-label="Código"><i class="fa-brands fa-github"></i></a>
