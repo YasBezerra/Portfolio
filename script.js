@@ -57,6 +57,7 @@ let currentLang = localStorage.getItem('lang') || 'pt';
 const translations = {
     pt: {
         nav_about: "Sobre",
+        nav_corp_projects: "Experiência",
         nav_projects: "Projetos",
         nav_contact: "Contato",
         hero_subtitle: "Desenvolvedora Full Stack",
@@ -81,6 +82,10 @@ const translations = {
         projects_title: "Projetos Selecionados",
         projects_loading: "Carregando projetos do GitHub...",
         projects_viewmore: "Ver mais projetos no GitHub <i class='fa-solid fa-arrow-right'></i>",
+        corp_projects_title: "Projetos Corporativos",
+        ecac_title: "Crawler E-CAC (Receita Federal)",
+        ecac_role: "Desenvolvedora Full Stack (Estágio)",
+        ecac_desc: "Robô de automação desenvolvido para extração de dados fiscais no portal E-CAC. Além da extração técnica com Python e Playwright, o projeto incluiu o tratamento e validação de dados sensíveis com os setores responsáveis, otimizando a rotina operacional do cliente.",
         contact_title: "Vamos criar algo incrível?",
         contact_desc: "Estou aberta a novas oportunidades e colaborações. Deixe-me uma mensagem!",
         contact_name: "Seu Nome",
@@ -91,6 +96,7 @@ const translations = {
     },
     en: {
         nav_about: "About",
+        nav_corp_projects: "Experience",
         nav_projects: "Projects",
         nav_contact: "Contact",
         hero_subtitle: "Full Stack Developer",
@@ -115,6 +121,10 @@ const translations = {
         projects_title: "Selected Projects",
         projects_loading: "Loading GitHub projects...",
         projects_viewmore: "View more projects on GitHub <i class='fa-solid fa-arrow-right'></i>",
+        corp_projects_title: "Corporate Projects",
+        ecac_title: "E-CAC Crawler (Federal Revenue)",
+        ecac_role: "Full Stack Developer (Internship)",
+        ecac_desc: "Automation bot developed for tax data extraction on the E-CAC portal. Beyond technical extraction with Python and Playwright, the project included handling and validation of sensitive data with responsible sectors, optimizing the client's operational routine.",
         contact_title: "Let's build something amazing?",
         contact_desc: "I'm open to new opportunities and thrilling collaborations. Drop me a message!",
         contact_name: "Your Name",
@@ -184,9 +194,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadTheme();
+    renderCorporateProjects();
     fetchGitHubProjects();
     updateYear();
 });
+
+// Corporate Projects
+function renderCorporateProjects() {
+    const container = document.getElementById('corp-projects-container');
+    if (!container) return;
+
+    const projects = [
+        {
+            id: 'ecac',
+            image: 'ecac-crawler.png',
+            tags: ['Python', 'Playwright', 'API HTTP', 'Automation'],
+            pt: {
+                title: translations.pt.ecac_title,
+                role: translations.pt.ecac_role,
+                desc: translations.pt.ecac_desc
+            },
+            en: {
+                title: translations.en.ecac_title,
+                role: translations.en.ecac_role,
+                desc: translations.en.ecac_desc
+            }
+        }
+    ];
+
+    container.innerHTML = projects.map(proj => `
+        <div class="corp-project-card">
+            <div class="corp-project-image-container">
+                <img src="${proj.image}" alt="${proj[currentLang].title}" class="corp-project-image">
+            </div>
+            <div class="corp-project-info">
+                <span class="corp-project-badge">Case Study</span>
+                <h3>${proj[currentLang].title}</h3>
+                <p class="role">${proj[currentLang].role}</p>
+                <p>${proj[currentLang].desc}</p>
+                <div class="corp-project-tags">
+                    ${proj.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
 
 // Intro Logic
 function startIntro(overlay, textElement) {
