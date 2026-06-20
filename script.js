@@ -86,6 +86,12 @@ const translations = {
         ecac_title: "Crawler E-CAC (Receita Federal)",
         ecac_role: "Desenvolvedora Full Stack (Estágio)",
         ecac_desc: "Robô de automação desenvolvido para extração de dados fiscais no portal E-CAC. Além da extração técnica com Python e Playwright, o projeto incluiu o tratamento e validação de dados sensíveis com os setores responsáveis, otimizando a rotina operacional do cliente.",
+        lei_do_bem_title: "Plataforma Lei do Bem",
+        lei_do_bem_role: "Desenvolvedora Full Stack",
+        lei_do_bem_desc: "Desenvolvimento de plataforma voltada ao suporte e otimização do processo de incentivos fiscais da Lei do Bem para empresas. Atuação na evolução de funcionalidades do produto, modelagem estrutural de dados e aprimoramento da experiência do usuário (UX/UI) com foco em usabilidade e performance.",
+        welltec_title: "Plataforma Logística Welltec",
+        welltec_role: "Desenvolvedora Full Stack",
+        welltec_desc: "Atuação no desenvolvimento de uma plataforma robusta de logística. Participação na modelagem de novos módulos e funcionalidades, codificação de APIs e front-end, e suporte técnico na evolução contínua do produto para otimização de rotinas logísticas.",
         contact_title: "Vamos criar algo incrível?",
         contact_desc: "Estou aberta a novas oportunidades e colaborações. Deixe-me uma mensagem!",
         contact_name: "Seu Nome",
@@ -125,6 +131,12 @@ const translations = {
         ecac_title: "E-CAC Crawler (Federal Revenue)",
         ecac_role: "Full Stack Developer (Internship)",
         ecac_desc: "Automation bot developed for tax data extraction on the E-CAC portal. Beyond technical extraction with Python and Playwright, the project included handling and validation of sensitive data with responsible sectors, optimizing the client's operational routine.",
+        lei_do_bem_title: "Lei do Bem Platform",
+        lei_do_bem_role: "Full Stack Developer",
+        lei_do_bem_desc: "Contributed to the development of a web platform designed to streamline and manage federal tax incentives (Lei do Bem) for enterprises. Focused on feature enhancement, structural database design, and UI/UX optimization to improve user engagement and system efficiency.",
+        welltec_title: "Welltec Logistics Platform",
+        welltec_role: "Full Stack Developer",
+        welltec_desc: "Developed end-to-end features for a robust supply chain and logistics web application. Participated in feature planning, database design, backend/frontend development, and continuous product evolution to streamline operational workflows.",
         contact_title: "Let's build something amazing?",
         contact_desc: "I'm open to new opportunities and thrilling collaborations. Drop me a message!",
         contact_name: "Your Name",
@@ -175,6 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Refetch projects to re-render project cards with new language
             fetchGitHubProjects();
+            // Re-render corporate projects with new language
+            renderCorporateProjects();
         });
     }
 
@@ -218,6 +232,36 @@ function renderCorporateProjects() {
                 title: translations.en.ecac_title,
                 role: translations.en.ecac_role,
                 desc: translations.en.ecac_desc
+            }
+        },
+        {
+            id: 'lei-do-bem',
+            image: 'lei-do-bem.png',
+            tags: ['React', 'Node.js', 'SQL', 'UX/UI'],
+            pt: {
+                title: translations.pt.lei_do_bem_title,
+                role: translations.pt.lei_do_bem_role,
+                desc: translations.pt.lei_do_bem_desc
+            },
+            en: {
+                title: translations.en.lei_do_bem_title,
+                role: translations.en.lei_do_bem_role,
+                desc: translations.en.lei_do_bem_desc
+            }
+        },
+        {
+            id: 'welltec',
+            image: 'welltec.png',
+            tags: ['Vue.js', 'Node.js', 'REST API', 'Database'],
+            pt: {
+                title: translations.pt.welltec_title,
+                role: translations.pt.welltec_role,
+                desc: translations.pt.welltec_desc
+            },
+            en: {
+                title: translations.en.welltec_title,
+                role: translations.en.welltec_role,
+                desc: translations.en.welltec_desc
             }
         }
     ];
